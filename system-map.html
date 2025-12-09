@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simulacrum of the Triple Goddess – System & Logic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --phi: 1.618;
+      --color-salt-bg: #05040a;
+      --color-salt-grid: rgba(255, 255, 255, 0.04);
+      --color-mercury: #c0c8ff;
+      --color-sulfur: #ffb347;
+      --color-salt: #f4f4f4;
+      --radius-large: 24px;
+      --border-glow: 1px solid rgba(255, 255, 255, 0.22);
+      --shadow-soft: 0 0 40px rgba(0, 0, 0, 0.7);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, #1b1530 0, transparent 50%),
+        radial-gradient(circle at bottom, #0a111f 0, transparent 55%),
+        #000;
+      color: var(--color-salt);
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .shell {
+      width: min(960px, 100%);
+      padding: 24px 20px 20px;
+      border-radius: calc(var(--radius-large) * 1.1);
+      background:
+        linear-gradient(
+          to right,
+          var(--color-salt-grid) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          to bottom,
+          var(--color-salt-grid) 1px,
+          transparent 1px
+        );
+      background-size:
+        calc(32px * var(--phi)) calc(32px * var(--phi)),
+        calc(32px * var(--phi)) calc(32px * var(--phi));
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: 14%;
+      border-radius: 50%;
+      border: 1px dashed rgba(255, 255, 255, 0.12);
+      box-shadow:
+        0 0 80px rgba(255, 255, 255, 0.04),
+        0 0 140px rgba(192, 200, 255, 0.24);
+      pointer-events: none;
+    }
+
+    .inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .title-block h1 {
+      font-size: 1.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-mercury);
+      margin-bottom: 4px;
+    }
+
+    .title-block p {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.76);
+      max-width: 32rem;
+    }
+
+    .back-link {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      font-size: 0.8rem;
+      text-decoration: none;
+      color: var(--color-mercury);
+      background: rgba(0, 0, 0, 0.65);
+    }
+
+    .back-link:hover {
+      background: rgba(192, 200, 255, 0.12);
+    }
+
+    h2 {
+      margin-top: 18px;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    p {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.88);
+      margin-bottom: 6px;
+    }
+
+    ul {
+      font-size: 0.83rem;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.88);
+      margin-left: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    code {
+      font-size: 0.8rem;
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .diagram-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 760px) {
+      .diagram-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .diagram-card {
+      border-radius: 16px;
+      border: var(--border-glow);
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.72);
+      font-size: 0.8rem;
+    }
+
+    .diagram-card h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .glyph {
+      margin: 4px 0 6px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .glyph svg {
+      width: 72px;
+      height: 72px;
+      display: block;
+    }
+
+    .tiny-caption {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .hex-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 8px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .hex-card {
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(0, 0, 0, 0.78);
+      padding: 6px 8px;
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .hex-card-number {
+      font-weight: 600;
+      color: var(--color-sulfur);
+      font-size: 0.8rem;
+    }
+
+    .hex-card-name {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hex-card-key {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.72rem;
+    }
+
+    .minor-example {
+      border-radius: 16px;
+      border: var(--border-glow);
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .minor-example strong {
+      color: var(--color-sulfur);
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="inner">
+      <header>
+        <div class="title-block">
+          <h1>System &amp; Logic</h1>
+          <p>
+            A plain-language guide to how the Triple Goddess engine links
+            <em>Geomancy</em>, the <em>I&nbsp;Ching</em> and <em>Tarot</em>
+            into one coherent divination system.
+          </p>
+        </div>
+        <a href="index.html" class="back-link">← Back to Oracle</a>
+      </header>
+
+      <h2>1. What this system actually does</h2>
+      <p>
+        Think of this as a translator between three “languages of meaning”:
+      </p>
+      <ul>
+        <li><strong>Geomantic figures</strong> – 16 patterns of dots and lines (Via, Populus, Laetitia, etc.).</li>
+        <li><strong>I&nbsp;Ching hexagrams</strong> – 64 six-line patterns that describe processes and situations.</li>
+        <li><strong>Tarot cards</strong> – Major and Minor Arcana images and stories.</li>
+      </ul>
+      <p>
+        No matter where you start (coins, a hexagram number, or a Tarot card),
+        the system always builds the same kind of “triad”:
+      </p>
+      <ul>
+        <li><strong>State</strong> – the geomantic figure (what the situation <em>is like</em>).</li>
+        <li><strong>Process</strong> – the I&nbsp;Ching hexagram (how it is <em>moving</em>).</li>
+        <li><strong>Archetypes</strong> – the Tarot cards (the story and characters involved).</li>
+      </ul>
+
+      <h2>2. From 12 coins to a geomantic figure</h2>
+      <p>
+        On the main page, when you press <strong>“Cast 12 Coins”</strong>, the website uses your
+        12-coin protocol:
+      </p>
+      <ul>
+        <li>There are 4 rows (Fire, Air, Water, Earth), each with 3 coins (4 × 3 = 12 tosses).</li>
+        <li>For each row, the system counts <strong>heads</strong>:
+          <ul>
+            <li>Odd number of heads → <code>1</code> (active / dotted).</li>
+            <li>Even number of heads → <code>2</code> (passive / solid).</li>
+          </ul>
+        </li>
+        <li>This gives a 4-number code like <code>[1,2,2,1]</code>.</li>
+        <li>That code is looked up in the figure list to find Laetitia, Populus, etc.</li>
+      </ul>
+
+      <div class="diagram-grid">
+        <div class="diagram-card">
+          <h3>Laetitia (Joy)</h3>
+          <div class="glyph">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="80" r="4" fill="#ffb347" />
+              <rect x="32" y="61" width="36" height="4" rx="2" fill="#f4f4f4" />
+              <rect x="32" y="43" width="36" height="4" rx="2" fill="#f4f4f4" />
+              <circle cx="50" cy="24" r="4" fill="#ffb347" />
+            </svg>
+          </div>
+          <p class="tiny-caption">
+            Code <code>[1,2,2,1]</code>, “Joy / Uplift”.
+          </p>
+        </div>
+
+        <div class="diagram-card">
+          <h3>Populus (The People)</h3>
+          <div class="glyph">
+            <svg viewBox="0 0 100 100">
+              <rect x="32" y="22" width="36" height="4" rx="2" fill="#f4f4f4" />
+              <rect x="32" y="40" width="36" height="4" rx="2" fill="#f4f4f4" />
+              <rect x="32" y="58" width="36" height="4" rx="2" fill="#f4f4f4" />
+              <rect x="32" y="76" width="36" height="4" rx="2" fill="#f4f4f4" />
+            </svg>
+          </div>
+          <p class="tiny-caption">
+            Code <code>[2,2,2,2]</code>, “The Crowd / Collective”.
+          </p>
+        </div>
+
+        <div class="diagram-card">
+          <h3>Via (The Path)</h3>
+          <div class="glyph">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="22" r="4" fill="#ffb347" />
+              <circle cx="50" cy="40" r="4" fill="#ffb347" />
+              <circle cx="50" cy="58" r="4" fill="#ffb347" />
+              <circle cx="50" cy="76" r="4" fill="#ffb347" />
+            </svg>
+          </div>
+          <p class="tiny-caption">
+            Code <code>[1,1,1,1]</code>, “The Road / Journey”.
+          </p>
+        </div>
+      </div>
+
+      <h2>3. From figure to hexagram</h2>
+      <p>
+        In your full spec, there is a binary algorithm that can turn any figure into a 6-bit
+        number and then into a hexagram. In practice, you also defined a
+        <strong>curated primary mapping</strong> that says:
+      </p>
+      <ul>
+        <li><code>Laetitia</code> → Hexagram 10 (careful, conscious conduct).</li>
+        <li><code>Carcer</code> → Hexagram 12 (blockage / standstill).</li>
+        <li><code>Via</code> → Hexagram 53 (gradual development), and so on.</li>
+      </ul>
+      <p>
+        The website uses this curated mapping first, which keeps the hexagrams aligned with the
+        meanings you actually want.
+      </p>
+
+      <h2>4. From hexagram to Tarot Majors</h2>
+      <p>
+        Each geomantic figure also carries a cluster of Tarot Majors. Examples:
+      </p>
+      <ul>
+        <li><strong>Via</strong> → Hex. 53 → <em>The Chariot</em>.</li>
+        <li><strong>Populus</strong> → Hex. 8 → <em>The High Priestess</em>, <em>The Moon</em>.</li>
+        <li><strong>Laetitia</strong> → Hex. 10 → <em>The Star</em> (+ minor Cups echoes in your notes).</li>
+        <li><strong>Carcer</strong> → Hex. 12 → <em>The Devil</em>.</li>
+      </ul>
+      <p>
+        On the main page, the “Tarot Majors” card simply displays the majors linked to whichever
+        figure ends up in the triad.
+      </p>
+
+      <h2>5. Starting from any side (reverse mapping)</h2>
+      <p>
+        The engine can start from any of the three systems and build the same kind of triad:
+      </p>
+      <ul>
+        <li><strong>Start from geomancy</strong> – look up its hexagram + majors directly.</li>
+        <li><strong>Start from I&nbsp;Ching</strong> – find the geomantic figure whose hexagram
+          number or meaning fits best, then pull its majors.</li>
+        <li><strong>Start from a Tarot Major</strong> – link that card to one or more figures,
+          then derive the hexagrams for those figures.</li>
+        <li><strong>Start from a Tarot Minor</strong> – use the trigram mapping below to get a
+          hexagram, then find a geomantic figure that matches that hexagram.</li>
+      </ul>
+
+      <h2>6. How Tarot Minors are mapped (simple version)</h2>
+      <p>
+        The Minor Arcana uses the <strong>trigram</strong> logic from the I&nbsp;Ching (Heaven, Lake,
+        Fire, Thunder, Wind, Water, Mountain, Earth).
+      </p>
+      <ul>
+        <li>Each <strong>suit</strong> becomes a <em>lower trigram</em>:
+          <ul>
+            <li>Wands → Thunder (<code>zhen</code>)</li>
+            <li>Cups → Water (<code>kan</code>)</li>
+            <li>Swords → Wind/Wood (<code>xun</code>)</li>
+            <li>Pentacles → Earth (<code>kun</code>)</li>
+          </ul>
+        </li>
+        <li>Each <strong>rank</strong> becomes an <em>upper trigram</em>:
+          <ul>
+            <li>Ace → Heaven (<code>qian</code>)</li>
+            <li>2 → Earth (<code>kun</code>)</li>
+            <li>3 → Thunder (<code>zhen</code>)</li>
+            <li>4 → Water (<code>kan</code>)</li>
+            <li>5 → Mountain (<code>gen</code>)</li>
+            <li>6 → Wind (<code>xun</code>)</li>
+            <li>7 → Fire (<code>li</code>)</li>
+            <li>8 → Lake (<code>dui</code>)</li>
+            <li>9 → Heaven (<code>qian</code>) again</li>
+            <li>10 → Earth (<code>kun</code>) again</li>
+            <li>Page → Thunder (<code>zhen</code>)</li>
+            <li>Knight → Water (<code>kan</code>)</li>
+            <li>Queen → Wind (<code>xun</code>)</li>
+            <li>King → Fire (<code>li</code>)</li>
+          </ul>
+        </li>
+      </ul>
+      <p>
+        Once you know <em>upper trigram</em> and <em>lower trigram</em>, the system looks up a
+        hexagram number in an internal 8×8 table (row = upper, column = lower).
+      </p>
+
+      <div class="minor-example">
+        <p><strong>Example: 2 of Cups</strong></p>
+        <ul>
+          <li>Suit = Cups → lower trigram = Water (<code>kan</code>).</li>
+          <li>Rank = 2 → upper trigram = Earth (<code>kun</code>).</li>
+          <li>Pair (upper = kun, lower = kan) → some hexagram number from the 8×8 table.</li>
+          <li>From that hexagram, the system picks a geomantic figure whose mapped hexagram or
+            meaning fits best (for example, <em>Populus</em> for “union / community”).</li>
+        </ul>
+        <p>
+          So the 2 of Cups is read as:
+          <strong>image of emotional union</strong> + <strong>hexagram process</strong> +
+          <strong>geomantic state</strong>, all talking about the same relationship situation.
+        </p>
+      </div>
+
+      <h2>7. The 64 hexagrams at a glance</h2>
+      <p>
+        Here is the internal list of 64 hexagrams the site uses, with simple keywords. These are
+        what you see when a figure or a Minor card resolves to a specific hexagram number.
+      </p>
+
+      <div class="hex-grid" id="hex-grid">
+        <!-- Filled by script -->
+      </div>
+
+      <h2>8. Why the design looks like this</h2>
+      <p>
+        The page layout itself is symbolic:
+      </p>
+      <ul>
+        <li>The faint grid uses the golden ratio φ for spacing (sacred geometry baked into CSS).</li>
+        <li>Gold accents stand for <strong>sulfur</strong> (will, fire, action).</li>
+        <li>Silvery blues stand for <strong>mercury</strong> (mind, communication, interface).</li>
+        <li>The dark background is <strong>salt</strong> (the body / vessel holding the work).</li>
+        <li>The large dashed circle hints at the triple moon orbit of the Goddess: waxing, full, waning.</li>
+      </ul>
+      <p>
+        PLACE HOLDER TEXT
+      </p>
+    </div>
+  </main>
+
+  <script>
+    // Simple hexagram list: number + quick keyword
+    const HEXAGRAMS = [
+      null,
+      { n: 1,  k: "Creative force",           name: "Hexagram 1"  },
+      { n: 2,  k: "Receptive earth",         name: "Hexagram 2"  },
+      { n: 3,  k: "Difficulty at the start", name: "Hexagram 3"  },
+      { n: 4,  k: "Youthful folly",          name: "Hexagram 4"  },
+      { n: 5,  k: "Waiting / nourishment",   name: "Hexagram 5"  },
+      { n: 6,  k: "Conflict",                name: "Hexagram 6"  },
+      { n: 7,  k: "The army / effort",       name: "Hexagram 7"  },
+      { n: 8,  k: "Union / holding together",name: "Hexagram 8"  },
+      { n: 9,  k: "Minor restraint",         name: "Hexagram 9"  },
+      { n: 10, k: "Treading / conduct",      name: "Hexagram 10" },
+      { n: 11, k: "Peace / prosperity",      name: "Hexagram 11" },
+      { n: 12, k: "Standstill / blockage",   name: "Hexagram 12" },
+      { n: 13, k: "Fellowship / people",     name: "Hexagram 13" },
+      { n: 14, k: "Great possession",        name: "Hexagram 14" },
+      { n: 15, k: "Modesty",                 name: "Hexagram 15" },
+      { n: 16, k: "Enthusiasm",              name: "Hexagram 16" },
+      { n: 17, k: "Following",               name: "Hexagram 17" },
+      { n: 18, k: "Repairing the spoiled",   name: "Hexagram 18" },
+      { n: 19, k: "Approach",                name: "Hexagram 19" },
+      { n: 20, k: "Contemplation",           name: "Hexagram 20" },
+      { n: 21, k: "Biting through",          name: "Hexagram 21" },
+      { n: 22, k: "Grace / adornment",       name: "Hexagram 22" },
+      { n: 23, k: "Splitting apart",         name: "Hexagram 23" },
+      { n: 24, k: "Return / turning point",  name: "Hexagram 24" },
+      { n: 25, k: "Innocence / the unexpected", name: "Hexagram 25" },
+      { n: 26, k: "Taming power (great)",    name: "Hexagram 26" },
+      { n: 27, k: "Mouth / nourishment",     name: "Hexagram 27" },
+      { n: 28, k: "Great excess",            name: "Hexagram 28" },
+      { n: 29, k: "The abyss / danger",      name: "Hexagram 29" },
+      { n: 30, k: "Clinging / fire",         name: "Hexagram 30" },
+      { n: 31, k: "Influence / attraction",  name: "Hexagram 31" },
+      { n: 32, k: "Duration / constancy",    name: "Hexagram 32" },
+      { n: 33, k: "Retreat",                 name: "Hexagram 33" },
+      { n: 34, k: "Great power",             name: "Hexagram 34" },
+      { n: 35, k: "Progress",                name: "Hexagram 35" },
+      { n: 36, k: "Darkening of the light",  name: "Hexagram 36" },
+      { n: 37, k: "The family",              name: "Hexagram 37" },
+      { n: 38, k: "Opposition",              name: "Hexagram 38" },
+      { n: 39, k: "Obstruction",             name: "Hexagram 39" },
+      { n: 40, k: "Deliverance",             name: "Hexagram 40" },
+      { n: 41, k: "Decrease",                name: "Hexagram 41" },
+      { n: 42, k: "Increase",                name: "Hexagram 42" },
+      { n: 43, k: "Breakthrough",            name: "Hexagram 43" },
+      { n: 44, k: "Coming to meet",          name: "Hexagram 44" },
+      { n: 45, k: "Gathering together",      name: "Hexagram 45" },
+      { n: 46, k: "Pushing upward",          name: "Hexagram 46" },
+      { n: 47, k: "Oppression / exhaustion", name: "Hexagram 47" },
+      { n: 48, k: "The well",                name: "Hexagram 48" },
+      { n: 49, k: "Revolution / molting",    name: "Hexagram 49" },
+      { n: 50, k: "The cauldron",            name: "Hexagram 50" },
+      { n: 51, k: "Thunder / shock",         name: "Hexagram 51" },
+      { n: 52, k: "Mountain / stillness",    name: "Hexagram 52" },
+      { n: 53, k: "Gradual development",     name: "Hexagram 53" },
+      { n: 54, k: "The marrying maiden",     name: "Hexagram 54" },
+      { n: 55, k: "Abundance",               name: "Hexagram 55" },
+      { n: 56, k: "The wanderer",            name: "Hexagram 56" },
+      { n: 57, k: "Gentle wind",             name: "Hexagram 57" },
+      { n: 58, k: "Joyous lake",             name: "Hexagram 58" },
+      { n: 59, k: "Dispersion",              name: "Hexagram 59" },
+      { n: 60, k: "Limitation",              name: "Hexagram 60" },
+      { n: 61, k: "Inner truth",             name: "Hexagram 61" },
+      { n: 62, k: "Small exceeding",         name: "Hexagram 62" },
+      { n: 63, k: "After completion",        name: "Hexagram 63" },
+      { n: 64, k: "Before completion",       name: "Hexagram 64" }
+    ];
+
+    const grid = document.getElementById("hex-grid");
+    HEXAGRAMS.forEach((h) => {
+      if (!h) return;
+      const card = document.createElement("div");
+      card.className = "hex-card";
+
+      const num = document.createElement("div");
+      num.className = "hex-card-number";
+      num.textContent = `#${h.n}`;
+
+      const name = document.createElement("div");
+      name.className = "hex-card-name";
+      name.textContent = h.name;
+
+      const key = document.createElement("div");
+      key.className = "hex-card-key";
+      key.textContent = h.k;
+
+      card.appendChild(num);
+      card.appendChild(name);
+      card.appendChild(key);
+      grid.appendChild(card);
+    });
+  </script>
+</body>
+</html>
